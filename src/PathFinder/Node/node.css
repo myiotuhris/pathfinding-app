@@ -3,7 +3,7 @@
     height: 25px;
     outline: 1px solid rgb(14, 104, 14);
     display: inline-block;
-    margin: 0px;
+    margin-bottom: -3px;
   }
   
   .node-finish {
