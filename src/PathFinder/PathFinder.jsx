@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import Node from './Node/Node';
 import './PathFinder.css';
+// import {bfs} from './algo/bfs';
+// import{dfs} from './algo/dfs';
+import {djikstra, getNodesInShortestPathOrder} from '../algo/djikstra';
 
 const START_ROW=5;
 const NUMROWS=20;
@@ -35,13 +38,48 @@ export default class PathFinder extends Component {
     handleMouseUp(row,col){
       this.setState({mouseIsPressed: false,});
     }
+    animateDjikstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+      for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+        if (i === visitedNodesInOrder.length) {
+          setTimeout(() => {
+            this.animateShortestPath(nodesInShortestPathOrder);
+          }, 10 * i);
+          return;
+        }
+        setTimeout(() => {
+          const node = visitedNodesInOrder[i];
+          document.getElementById(`node-${node.row}-${node.col}`).className =
+            'node node-visited';
+        }, 10 * i);
+      }
+    }
+  
+    animateShortestPath(nodesInShortestPathOrder) {
+      for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+        setTimeout(() => {
+          const node = nodesInShortestPathOrder[i];
+          document.getElementById(`node-${node.row}-${node.col}`).className =
+            'node node-shortest-path';
+        }, 5 * i);
+      }
+    }
+  
+    visualizeDjikstra() {
+      const grid = this.state.grid;
+      const startNode = grid[START_ROW][START_COL];
+      const finishNode = grid[END_ROW][END_COL];
+      const visitedNodesInOrder = djikstra(grid, startNode, finishNode);
+      const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+      this.animateDjikstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
+    //visualizeDfs()
     render(){
         const grid=this.state.grid;
         const mousePress=this.state.mouseIsPressed;
 
         return(
             <>
-            <button>Find Path</button>
+            <button onClick={()=>this.visualizeDjikstra()}>Find Path</button>
             <div className='board'>
             {grid.map((row, rowIdx) => {
             return (
