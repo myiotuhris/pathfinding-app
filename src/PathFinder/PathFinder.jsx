@@ -23,7 +23,18 @@ export default class PathFinder extends Component {
         this.setState({grid:grid});
     }
        
-
+    handleMouseDown(row,col){
+      const newgrid=getNewGrid(this.state.grid,row,col);
+      this.setState({grid: newgrid,mouseIsPressed: true,});
+    }
+    handleMouseEnter(row,col){
+      if(!this.state.mouseIsPressed) return;
+      const newgrid=getNewGrid(this.state.grid,row,col);
+      this.setState({grid: newgrid,});
+    }
+    handleMouseUp(row,col){
+      this.setState({mouseIsPressed: false,});
+    }
     render(){
         const grid=this.state.grid;
         const mousePress=this.state.mouseIsPressed;
@@ -87,4 +98,16 @@ const getInitGrid=()=>{
         grid.push(temp);
     }
     return grid;
+};
+const getNewGrid=(grid,row,col)=>{
+    const temp=grid.slice();
+    const prevnode=temp[row][col];
+    const newnode={
+      ...prevnode,
+      isWall: !prevnode.isWall,
+    }
+    temp[row][col]=newnode;
+    return temp;
+
+
 };
