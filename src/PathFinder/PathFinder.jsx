@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import Node from './Node/Node';
 import './PathFinder.css';
-import {bfs,getNodesInShortestPathOrderBFS} from '../algo/bfs';
-// import{dfs} from './algo/dfs';
+import {bfs,getNodesInShortestPathOrder} from '../algo/bfs';
+import{dfs} from '../algo/dfs';
 //import {djikstra, getNodesInShortestPathOrder} from '../algo/djikstra';
 
 const START_ROW=5;
@@ -39,7 +39,7 @@ export default class PathFinder extends Component {
     handleMouseUp(row,col){
       this.setState({mouseIsPressed: false,});
     }
-    animateBFS(visitedNodesInOrder, nodesInShortestPathOrder) {
+    animateAlgo(visitedNodesInOrder, nodesInShortestPathOrder) {
       for (let i = 0; i <= visitedNodesInOrder.length; i++) {
         if (i === visitedNodesInOrder.length) {
           setTimeout(() => {
@@ -77,17 +77,26 @@ export default class PathFinder extends Component {
       //   let temp=visitedNodesInOrder[i].prevNode;
       //   console.log({temp});
       // }
-      const nodesInShortestPathOrder = getNodesInShortestPathOrderBFS(finishNode);
-      this.animateBFS(visitedNodesInOrder, nodesInShortestPathOrder);
+      const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+      this.animateAlgo(visitedNodesInOrder, nodesInShortestPathOrder);
     }
-    //visualizeDfs()
+    visualizeDFS(){
+      if(this.state.visualizing) return;
+      this.setState({visualizing:true});
+      const grid = this.state.grid;
+      const startNode = grid[START_ROW][START_COL];
+      const finishNode = grid[END_ROW][END_COL];
+      const visitedNodesInOrder = dfs(grid, startNode, finishNode);
+      const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+      this.animateAlgo(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
     render(){
         const grid=this.state.grid;
         const mousePress=this.state.mouseIsPressed;
 
         return(
             <>
-            <button onClick={()=>this.visualizeBFS()}>Find Path with BFS</button>
+            <button onClick={()=>this.visualizeBFS()}>Find Path</button>
             <div className='board'>
             {grid.map((row, rowIdx) => {
             return (

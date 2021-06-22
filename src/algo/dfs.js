@@ -12,22 +12,22 @@ export function dfs(grid,startNode,endNode){
             let neighbour;
             if(row>0){
                 neighbour=grid[row-1][col];
-                if(!neighbour.isVisted) {nextNodeList.push(neighbour);neighbour.previousNode=currNode;}
+                if(!neighbour.isVisited) {nextNodeList.push(neighbour);neighbour.prevNode=currNode;}
 
             }
             if(row<grid.length-1){
                 neighbour=grid[row+1][col];
-                if(!neighbour.isVisted) {nextNodeList.push(neighbour);neighbour.previousNode=currNode;}
+                if(!neighbour.isVisited) {nextNodeList.push(neighbour);neighbour.prevNode=currNode;}
 
             }
             if(col>0){
                 neighbour=grid[row][col-1];
-                if(!neighbour.isVisted) {nextNodeList.push(neighbour);neighbour.previousNode=currNode;}
+                if(!neighbour.isVisited) {nextNodeList.push(neighbour);neighbour.prevNode=currNode;}
 
             }
             if(col<grid[0].length-1){
                 neighbour=grid[row][col+1];
-                if(!neighbour.isVisted) {nextNodeList.push(neighbour);neighbour.previousNode=currNode;}
+                if(!neighbour.isVisited) {nextNodeList.push(neighbour);neighbour.prevNode=currNode;}
 
             }
 

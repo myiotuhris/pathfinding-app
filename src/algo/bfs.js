@@ -35,7 +35,7 @@ export function bfs(grid,startNode,endNode){
     }
  
 }
-export function getNodesInShortestPathOrderBFS(finishNode) {
+export function getNodesInShortestPathOrder(finishNode) {
     let nodesInShortestPathOrder = [];
     let currentNode = finishNode;
     // let i=0;
