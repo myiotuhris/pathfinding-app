@@ -12,6 +12,7 @@ export default class Node extends Component {
             isWall,
             isVisited,
             isShortest,
+            prevNode,
             onMouseDown,
             onMouseUp,
             onMouseEnter,

@@ -49,8 +49,8 @@ export default class PathFinder extends Component {
         }
         setTimeout(() => {
           const node = visitedNodesInOrder[i];
-          document.getElementById(`node-${node.row}-${node.col}`).className =
-            'node node-visited';
+          if(!node.isStart){document.getElementById(`node-${node.row}-${node.col}`).className =
+            'node node-visited';}
         }, 10 * i);
       }
     }
@@ -59,8 +59,8 @@ export default class PathFinder extends Component {
       for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
         setTimeout(() => {
           const node = nodesInShortestPathOrder[i];
-          document.getElementById(`node-${node.row}-${node.col}`).className =
-            'node node-shortest-path';
+          if(!node.isStart && !node.isFinish){document.getElementById(`node-${node.row}-${node.col}`).className =
+            'node node-shortest-path';}
         }, 5 * i);
       }
       this.setState({visualizing:false});
@@ -73,6 +73,10 @@ export default class PathFinder extends Component {
       const startNode = grid[START_ROW][START_COL];
       const finishNode = grid[END_ROW][END_COL];
       const visitedNodesInOrder = bfs(grid, startNode, finishNode);
+      // for(let i=0;i<visitedNodesInOrder.length;i++){
+      //   let temp=visitedNodesInOrder[i].prevNode;
+      //   console.log({temp});
+      // }
       const nodesInShortestPathOrder = getNodesInShortestPathOrderBFS(finishNode);
       this.animateBFS(visitedNodesInOrder, nodesInShortestPathOrder);
     }

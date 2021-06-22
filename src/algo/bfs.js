@@ -12,39 +12,37 @@ export function bfs(grid,startNode,endNode){
             let neighbour;
             if(col<grid[0].length-1){
                 neighbour=grid[row][col+1];
-                if(!neighbour.isVisted) {nextNodeList.push(neighbour);neighbour.prevNode=currNode;}
+                if(!neighbour.isVisited) {nextNodeList.push(neighbour);neighbour.prevNode=currNode;}
 
             }
             if(row<grid.length-1){
                 neighbour=grid[row+1][col];
-                if(!neighbour.isVisted) {nextNodeList.push(neighbour);neighbour.prevNode=currNode;}
+                if(!neighbour.isVisited) {nextNodeList.push(neighbour);neighbour.prevNode=currNode;}
 
             }
             if(col>0){
                 neighbour=grid[row][col-1];
-                if(!neighbour.isVisted) {nextNodeList.push(neighbour);neighbour.prevNode=currNode;}
+                if(!neighbour.isVisited) {nextNodeList.push(neighbour);neighbour.prevNode=currNode;}
 
             }
             if(row>0){
                 neighbour=grid[row-1][col];
-                if(!neighbour.isVisted) {nextNodeList.push(neighbour);neighbour.prevNode=currNode;}
+                if(!neighbour.isVisited) {nextNodeList.push(neighbour);neighbour.prevNode=currNode;}
 
             }
             
         }
     }
-
-
-    return visitedNodesInOrder; 
+ 
 }
 export function getNodesInShortestPathOrderBFS(finishNode) {
-    const nodesInShortestPathOrder = [];
+    let nodesInShortestPathOrder = [];
     let currentNode = finishNode;
-    let i=0;
+    // let i=0;
     while (currentNode !== null) {
       nodesInShortestPathOrder.unshift(currentNode);
       currentNode = currentNode.prevNode;
-      console.log(i);i++;
+    //console.log(i);i++;
     }
     return nodesInShortestPathOrder;
   }
