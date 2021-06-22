@@ -26,3 +26,62 @@
     animation-fill-mode: forwards;
     animation-play-state: running;
   }
+  @keyframes visitedAnimation {
+    0% {
+      transform: scale(0.3);
+      background-color: rgb(255, 0, 255);
+      border-radius: 100%;
+    }
+  
+    50% {
+      transform: scale(0.5);
+      background-color: rgba(226, 131, 255, 0.75);
+      border-radius: 75%;
+    }
+  
+    75% {
+      transform: scale(0.7);
+      background-color: rgba(163, 164, 255, 0.75);
+      border-radius: 50%;
+    }
+  
+    100% {
+      transform: scale(1);
+      background-color: rgba(117, 237, 255, 0.966);
+    }
+  }
+  
+  .node-shortest-path {
+    animation-name: shortestPath;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in;
+    animation-delay: 0;
+    animation-direction: alternate;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    /* animation-play-state: running; */
+  }
+  @keyframes shortestPath {
+    0% {
+      transform: scale(0.3);
+      background-color: rgb(255, 245, 98);
+      border-radius: 100%;
+    }
+  
+    50% {
+      transform: scale(0.5);
+      background-color: rgba(255, 245, 98);
+      border-radius: 75%;
+    }
+  
+    75% {
+      transform: scale(0.7);
+      background-color: rgba(255, 245, 98);
+      border-radius: 50%;
+    }
+  
+    100% {
+      transform: scale(1);
+      background-color: rgba(255, 245, 98);
+    }
+  }

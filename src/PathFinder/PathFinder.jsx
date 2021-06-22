@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import Node from './Node/Node';
 import './PathFinder.css';
-// import {bfs} from './algo/bfs';
+import {bfs,getNodesInShortestPathOrderBFS} from '../algo/bfs';
 // import{dfs} from './algo/dfs';
-import {djikstra, getNodesInShortestPathOrder} from '../algo/djikstra';
+//import {djikstra, getNodesInShortestPathOrder} from '../algo/djikstra';
 
 const START_ROW=5;
 const NUMROWS=20;
@@ -18,6 +18,7 @@ export default class PathFinder extends Component {
       this.state = {
           mouseIsPressed: false,
           grid:[],
+          visualizing: false,
       };
 
     }
@@ -38,7 +39,7 @@ export default class PathFinder extends Component {
     handleMouseUp(row,col){
       this.setState({mouseIsPressed: false,});
     }
-    animateDjikstra(visitedNodesInOrder, nodesInShortestPathOrder) {
+    animateBFS(visitedNodesInOrder, nodesInShortestPathOrder) {
       for (let i = 0; i <= visitedNodesInOrder.length; i++) {
         if (i === visitedNodesInOrder.length) {
           setTimeout(() => {
@@ -62,15 +63,18 @@ export default class PathFinder extends Component {
             'node node-shortest-path';
         }, 5 * i);
       }
+      this.setState({visualizing:false});
     }
   
-    visualizeDjikstra() {
+    visualizeBFS() {
+      if(this.state.visualizing) return;
+      this.setState({visualizing:true});
       const grid = this.state.grid;
       const startNode = grid[START_ROW][START_COL];
       const finishNode = grid[END_ROW][END_COL];
-      const visitedNodesInOrder = djikstra(grid, startNode, finishNode);
-      const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-      this.animateDjikstra(visitedNodesInOrder, nodesInShortestPathOrder);
+      const visitedNodesInOrder = bfs(grid, startNode, finishNode);
+      const nodesInShortestPathOrder = getNodesInShortestPathOrderBFS(finishNode);
+      this.animateBFS(visitedNodesInOrder, nodesInShortestPathOrder);
     }
     //visualizeDfs()
     render(){
@@ -79,13 +83,13 @@ export default class PathFinder extends Component {
 
         return(
             <>
-            <button onClick={()=>this.visualizeDjikstra()}>Find Path</button>
+            <button onClick={()=>this.visualizeBFS()}>Find Path with BFS</button>
             <div className='board'>
             {grid.map((row, rowIdx) => {
             return (
               <div key={rowIdx}>
                 {row.map((node, nodeIdx) => {
-                  const { row, col, isFinish, isStart, isWall } = node;
+                  const { row, col, isFinish, isStart, isWall,isVisited,isShortest } = node;
                   return (
                     <Node
                       key={nodeIdx}
@@ -93,6 +97,8 @@ export default class PathFinder extends Component {
                       isFinish={isFinish}
                       isStart={isStart}
                       isWall={isWall}
+                      isVisited={isVisited}
+                      isShortest={isShortest}
                       mouseIsPressed={mousePress}
                       onMouseDown={(row, col) => this.handleMouseDown(row, col)}
                       onMouseEnter={(row, col) =>
@@ -121,7 +127,8 @@ const createNode=(col,row)=>{
         isFinish:(row==END_ROW)&& (col==END_COL),
         isWall: false,
         isVisited: false,
-        //distance: Infinity,
+        isShortest: false,
+        distance: Infinity,
         prevNode: null,
 
     }
