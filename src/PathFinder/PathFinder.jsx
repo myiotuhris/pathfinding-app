@@ -3,11 +3,11 @@ import Node from './Node/Node';
 import './PathFinder.css';
 import {bfs,getNodesInShortestPathOrder} from '../algo/bfs';
 import{dfs} from '../algo/dfs';
-//import {djikstra, getNodesInShortestPathOrder} from '../algo/djikstra';
+import {djikstra} from '../algo/djikstra';
 
-const START_ROW=5;
+const START_ROW=2;
 const NUMROWS=20;
-const START_COL=10;
+const START_COL=5;
 const NUMCOLS=40;
 const END_ROW=15;
 const END_COL=35;
@@ -49,7 +49,7 @@ export default class PathFinder extends Component {
         }
         setTimeout(() => {
           const node = visitedNodesInOrder[i];
-          if(!node.isStart){document.getElementById(`node-${node.row}-${node.col}`).className =
+          if(!node.isStart && !node.isFinish){document.getElementById(`node-${node.row}-${node.col}`).className =
             'node node-visited';}
         }, 10 * i);
       }
@@ -90,13 +90,23 @@ export default class PathFinder extends Component {
       const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
       this.animateAlgo(visitedNodesInOrder, nodesInShortestPathOrder);
     }
+    visualizeDjikstra(){
+      if(this.state.visualizing) return;
+      this.setState({visualizing:true});
+      const grid = this.state.grid;
+      const startNode = grid[START_ROW][START_COL];
+      const finishNode = grid[END_ROW][END_COL];
+      const visitedNodesInOrder = djikstra(grid, startNode, finishNode);
+      const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+      this.animateAlgo(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
     render(){
         const grid=this.state.grid;
         const mousePress=this.state.mouseIsPressed;
 
         return(
             <>
-            <button onClick={()=>this.visualizeBFS()}>Find Path</button>
+            <button onClick={()=>this.visualizeDjikstra()}>Find Path</button>
             <div className='board'>
             {grid.map((row, rowIdx) => {
             return (
