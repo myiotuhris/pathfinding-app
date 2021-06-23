@@ -1,10 +1,13 @@
 import React, {Component} from 'react';
 import Node from './Node/Node';
 import './PathFinder.css';
+import {bfs,getNodesInShortestPathOrder} from '../algo/bfs';
+import{dfs} from '../algo/dfs';
+import {djikstra} from '../algo/djikstra';
 
-const START_ROW=5;
+const START_ROW=2;
 const NUMROWS=20;
-const START_COL=10;
+const START_COL=5;
 const NUMCOLS=40;
 const END_ROW=15;
 const END_COL=35;
@@ -15,6 +18,7 @@ export default class PathFinder extends Component {
       this.state = {
           mouseIsPressed: false,
           grid:[],
+          visualizing: false,
       };
 
     }
@@ -35,19 +39,80 @@ export default class PathFinder extends Component {
     handleMouseUp(row,col){
       this.setState({mouseIsPressed: false,});
     }
+    animateAlgo(visitedNodesInOrder, nodesInShortestPathOrder) {
+      for (let i = 0; i <= visitedNodesInOrder.length; i++) {
+        if (i === visitedNodesInOrder.length) {
+          setTimeout(() => {
+            this.animateShortestPath(nodesInShortestPathOrder);
+          }, 10 * i);
+          return;
+        }
+        setTimeout(() => {
+          const node = visitedNodesInOrder[i];
+          if(!node.isStart && !node.isFinish){document.getElementById(`node-${node.row}-${node.col}`).className =
+            'node node-visited';}
+        }, 10 * i);
+      }
+    }
+  
+    animateShortestPath(nodesInShortestPathOrder) {
+      for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
+        setTimeout(() => {
+          const node = nodesInShortestPathOrder[i];
+          if(!node.isStart && !node.isFinish){document.getElementById(`node-${node.row}-${node.col}`).className =
+            'node node-shortest-path';}
+        }, 5 * i);
+      }
+      this.setState({visualizing:false});
+    }
+  
+    visualizeBFS() {
+      if(this.state.visualizing) return;
+      this.setState({visualizing:true});
+      const grid = this.state.grid;
+      const startNode = grid[START_ROW][START_COL];
+      const finishNode = grid[END_ROW][END_COL];
+      const visitedNodesInOrder = bfs(grid, startNode, finishNode);
+      // for(let i=0;i<visitedNodesInOrder.length;i++){
+      //   let temp=visitedNodesInOrder[i].prevNode;
+      //   console.log({temp});
+      // }
+      const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+      this.animateAlgo(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
+    visualizeDFS(){
+      if(this.state.visualizing) return;
+      this.setState({visualizing:true});
+      const grid = this.state.grid;
+      const startNode = grid[START_ROW][START_COL];
+      const finishNode = grid[END_ROW][END_COL];
+      const visitedNodesInOrder = dfs(grid, startNode, finishNode);
+      const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+      this.animateAlgo(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
+    visualizeDjikstra(){
+      if(this.state.visualizing) return;
+      this.setState({visualizing:true});
+      const grid = this.state.grid;
+      const startNode = grid[START_ROW][START_COL];
+      const finishNode = grid[END_ROW][END_COL];
+      const visitedNodesInOrder = djikstra(grid, startNode, finishNode);
+      const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+      this.animateAlgo(visitedNodesInOrder, nodesInShortestPathOrder);
+    }
     render(){
         const grid=this.state.grid;
         const mousePress=this.state.mouseIsPressed;
 
         return(
             <>
-            <button>Find Path</button>
+            <button onClick={()=>this.visualizeDjikstra()}>Find Path</button>
             <div className='board'>
             {grid.map((row, rowIdx) => {
             return (
               <div key={rowIdx}>
                 {row.map((node, nodeIdx) => {
-                  const { row, col, isFinish, isStart, isWall } = node;
+                  const { row, col, isFinish, isStart, isWall,isVisited,isShortest } = node;
                   return (
                     <Node
                       key={nodeIdx}
@@ -55,6 +120,8 @@ export default class PathFinder extends Component {
                       isFinish={isFinish}
                       isStart={isStart}
                       isWall={isWall}
+                      isVisited={isVisited}
+                      isShortest={isShortest}
                       mouseIsPressed={mousePress}
                       onMouseDown={(row, col) => this.handleMouseDown(row, col)}
                       onMouseEnter={(row, col) =>
@@ -83,7 +150,8 @@ const createNode=(col,row)=>{
         isFinish:(row==END_ROW)&& (col==END_COL),
         isWall: false,
         isVisited: false,
-        //distance: Infinity,
+        isShortest: false,
+        distance: Infinity,
         prevNode: null,
 
     }
